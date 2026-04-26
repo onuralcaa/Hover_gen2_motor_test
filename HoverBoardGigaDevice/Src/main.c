@@ -372,17 +372,27 @@ int main (void)
     }
 #endif
 		
-		// Read charge state
-		chargeStateLowActive = gpio_input_bit_get(CHARGE_STATE_PORT, CHARGE_STATE_PIN);
-		
-		// Enable is depending on charger is connected or not
-		enable = chargeStateLowActive;
+    // Read charge state
+    chargeStateLowActive = gpio_input_bit_get(CHARGE_STATE_PORT, CHARGE_STATE_PIN);
+
+#if CONSTANT_SPEED_MODE
+    // Test mode: force enable independent from charge-state input.
+    enable = SET;
+    chargeStateLowActive = SET;
+#else
+    // Enable is depending on charger is connected or not
+    enable = chargeStateLowActive;
+#endif
 		
 		// Enable channel output
 		SetEnable(enable);
 
 		// Decide if slave will be enabled
-		enableSlave = (enable == SET && timedOut == RESET) ? SET : RESET;
+#if CONSTANT_SPEED_MODE
+    enableSlave = SET;
+#else
+    enableSlave = (enable == SET && timedOut == RESET) ? SET : RESET;
+#endif
 		
 		// Decide which process value has to be sent
 		switch(sendSlaveIdentifier)
@@ -411,7 +421,8 @@ int main (void)
 			sendSlaveIdentifier = 0;
 		}
 		
-		// Show green battery symbol when battery level BAT_LOW_LVL1 is reached
+    // Show green battery symbol when battery level BAT_LOW_LVL1 is reached
+#if !CONSTANT_SPEED_MODE
     if (batteryVoltage > BAT_LOW_LVL1)
 		{
 			// Show green battery light
@@ -470,6 +481,7 @@ int main (void)
 		{ 
       ShutOff();
     }
+#endif
 #endif	
 
 		Delay(DELAY_IN_MAIN_LOOP);

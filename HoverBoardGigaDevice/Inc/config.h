@@ -73,7 +73,7 @@
 // Constant speed mode: when enabled, steering input is ignored and both motors
 // run with a fixed PWM value (range -1000..1000).
 #define CONSTANT_SPEED_MODE  1
-#define CONSTANT_SPEED_PWM   250
+#define CONSTANT_SPEED_PWM   350
 
 #ifdef MASTER
 #define SPEED_COEFFICIENT   -1
