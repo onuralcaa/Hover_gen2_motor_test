@@ -79,6 +79,11 @@
 #define TEST_BYPASS_START_BUTTON  1
 #define TEST_BYPASS_CURRENT_LIMIT 1
 
+// Force buzzer output for bring-up checks.
+#define TEST_FORCE_BUZZER         1
+#define TEST_BUZZER_FREQ          6
+#define TEST_BUZZER_PATTERN       0
+
 #ifdef MASTER
 #define SPEED_COEFFICIENT   -1
 #define STEER_COEFFICIENT   1

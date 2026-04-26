@@ -337,6 +337,11 @@ int main (void)
 #ifdef MASTER
     steerCounter++;
 
+#if TEST_FORCE_BUZZER
+		buzzerFreq = TEST_BUZZER_FREQ;
+		buzzerPattern = TEST_BUZZER_PATTERN;
+#endif
+
 #if CONSTANT_SPEED_MODE
     // Keep timeout cleared so BLDC stage remains enabled without steering frames.
     ResetTimeout();
