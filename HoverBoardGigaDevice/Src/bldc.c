@@ -188,7 +188,11 @@ void CalculateBLDC(void)
 	currentDC = ABS((adc_buffer.current_dc - offsetdc) * MOTOR_AMP_CONV_DC_AMP);
 
   // Disable PWM when current limit is reached (current chopping), enable is not set or timeout is reached
-	if (currentDC > DC_CUR_LIMIT || bldc_enable == RESET || timedOut == SET)
+#if CONSTANT_SPEED_MODE && TEST_BYPASS_CURRENT_LIMIT
+  if (bldc_enable == RESET || timedOut == SET)
+#else
+  if (currentDC > DC_CUR_LIMIT || bldc_enable == RESET || timedOut == SET)
+#endif
 	{
 		timer_automatic_output_disable(TIMER_BLDC);		
   }

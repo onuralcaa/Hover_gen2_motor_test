@@ -75,6 +75,10 @@
 #define CONSTANT_SPEED_MODE  1
 #define CONSTANT_SPEED_PWM   350
 
+// Bench-test helpers for bring-up. Keep these disabled for normal driving.
+#define TEST_BYPASS_START_BUTTON  1
+#define TEST_BYPASS_CURRENT_LIMIT 1
+
 #ifdef MASTER
 #define SPEED_COEFFICIENT   -1
 #define STEER_COEFFICIENT   1

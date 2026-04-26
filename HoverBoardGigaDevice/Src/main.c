@@ -322,12 +322,14 @@ int main (void)
   }
   buzzerFreq = 0;
 
-	// Wait until button is pressed
-	while (gpio_input_bit_get(BUTTON_PORT, BUTTON_PIN))
-	{
-		// Reload watchdog while button is pressed
-		fwdgt_counter_reload();
-	}
+  // Wait until button is pressed
+#if !(CONSTANT_SPEED_MODE && TEST_BYPASS_START_BUTTON)
+  while (gpio_input_bit_get(BUTTON_PORT, BUTTON_PIN))
+  {
+    // Reload watchdog while button is pressed
+    fwdgt_counter_reload();
+  }
+#endif
 #endif
 
   while(1)
