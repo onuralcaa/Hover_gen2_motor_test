@@ -337,6 +337,17 @@ int main (void)
 #ifdef MASTER
     steerCounter++;
 
+#if TEST_FORCE_LED
+    {
+      uint32_t ledStep = (millis() / TEST_LED_STEP_MS) % 4;
+      gpio_bit_write(LED_GREEN_PORT, LED_GREEN, ledStep == 0 ? SET : RESET);
+      gpio_bit_write(LED_ORANGE_PORT, LED_ORANGE, ledStep == 1 ? SET : RESET);
+      gpio_bit_write(LED_RED_PORT, LED_RED, ledStep == 2 ? SET : RESET);
+      gpio_bit_write(UPPER_LED_PORT, UPPER_LED_PIN, ledStep == 3 ? SET : RESET);
+      gpio_bit_write(LOWER_LED_PORT, LOWER_LED_PIN, ledStep == 3 ? SET : RESET);
+    }
+#endif
+
 #if TEST_FORCE_BUZZER
 		buzzerFreq = TEST_BUZZER_FREQ;
 		buzzerPattern = TEST_BUZZER_PATTERN;

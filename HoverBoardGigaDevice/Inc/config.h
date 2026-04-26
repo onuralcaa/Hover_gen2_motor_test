@@ -84,6 +84,10 @@
 #define TEST_BUZZER_FREQ          6
 #define TEST_BUZZER_PATTERN       0
 
+// Force a visible LED chase pattern for bring-up checks.
+#define TEST_FORCE_LED            1
+#define TEST_LED_STEP_MS          250
+
 #ifdef MASTER
 #define SPEED_COEFFICIENT   -1
 #define STEER_COEFFICIENT   1
