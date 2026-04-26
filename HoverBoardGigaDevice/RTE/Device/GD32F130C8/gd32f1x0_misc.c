@@ -64,10 +64,10 @@ void nvic_irq_enable(uint8_t nvic_irq, uint8_t nvic_irq_pre_priority,
     /* get the temp_priority to fill the NVIC->IP register */
     temp_priority = (uint32_t)nvic_irq_pre_priority << (0x4U - temp_pre);
     temp_priority |= nvic_irq_sub_priority &(0x0FU >> (0x4U - temp_sub));
-    temp_priority = temp_priority << 0x04U;
-    NVIC->IP[nvic_irq] = (uint8_t)temp_priority;
-    /* enable the selected IRQ */
-    NVIC->ISER[nvic_irq >> 0x05] = (uint32_t)0x01 << (nvic_irq & (uint8_t)0x1F);
+
+    /* Use CMSIS APIs for compatibility across NVIC register layouts. */
+    NVIC_SetPriority((IRQn_Type)nvic_irq, temp_priority);
+    NVIC_EnableIRQ((IRQn_Type)nvic_irq);
 }
 
 /*!
@@ -79,7 +79,7 @@ void nvic_irq_enable(uint8_t nvic_irq, uint8_t nvic_irq_pre_priority,
 void nvic_irq_disable(uint8_t nvic_irq)
 {
     /* disable the selected IRQ.*/
-    NVIC->ICER[nvic_irq >> 0x05] = (uint32_t)0x01 << (nvic_irq & (uint8_t)0x1F);
+    NVIC_DisableIRQ((IRQn_Type)nvic_irq);
 }
 
 /*!

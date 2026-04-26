@@ -28,8 +28,6 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#define ARM_MATH_CM3
-
 #include "gd32f1x0.h"
 
 #include "../Inc/setup.h"
@@ -44,7 +42,6 @@
 #include "stdlib.h"
 #include "string.h"
 #include <math.h>     
-#include "arm_math.h" 
 
 #ifdef MASTER
 int32_t steer = 0; 												// global variable for steering. -1000 to 1000
