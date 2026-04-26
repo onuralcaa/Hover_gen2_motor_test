@@ -73,12 +73,12 @@
 // Constant speed mode: when enabled, steering input is ignored and both motors
 // run with a fixed PWM value (range -1000..1000).
 #define CONSTANT_SPEED_MODE  1
-#define CONSTANT_SPEED_PWM   300
-#define CONSTANT_SPEED_STARTUP_PWM 520
-#define CONSTANT_SPEED_STARTUP_MS  1200
-#define CONSTANT_SPEED_PULSE_MODE  0
-#define CONSTANT_SPEED_PULSE_ON_MS 300
-#define CONSTANT_SPEED_PULSE_PERIOD_MS 2000
+#define CONSTANT_SPEED_PWM   170
+#define CONSTANT_SPEED_STARTUP_PWM 260
+#define CONSTANT_SPEED_STARTUP_MS  400
+#define CONSTANT_SPEED_PULSE_MODE  1
+#define CONSTANT_SPEED_PULSE_ON_MS 120
+#define CONSTANT_SPEED_PULSE_PERIOD_MS 900
 
 // Bench-test helpers for bring-up. Keep these disabled for normal driving.
 #define TEST_BYPASS_START_BUTTON  1
@@ -92,7 +92,7 @@
 #define TEST_BUZZER_PERIOD_MS     10000
 
 // Hall diagnostics: emit short buzzer chirps on hall transitions.
-#define TEST_HALL_BUZZER          1
+#define TEST_HALL_BUZZER          0
 #define TEST_HALL_BUZZER_MS       40
 
 // Force a visible LED chase pattern for bring-up checks.
