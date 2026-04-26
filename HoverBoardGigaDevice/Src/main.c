@@ -349,14 +349,32 @@ int main (void)
 #endif
 
 #if TEST_FORCE_BUZZER
-		buzzerFreq = TEST_BUZZER_FREQ;
-		buzzerPattern = TEST_BUZZER_PATTERN;
+    {
+      uint32_t buzzerTick = millis() % TEST_BUZZER_PERIOD_MS;
+      if (buzzerTick < TEST_BUZZER_ON_MS)
+      {
+				buzzerFreq = TEST_BUZZER_FREQ;
+				buzzerPattern = TEST_BUZZER_PATTERN;
+      }
+      else
+      {
+        buzzerFreq = 0;
+        buzzerPattern = 0;
+      }
+    }
 #endif
 
 #if CONSTANT_SPEED_MODE
     // Keep timeout cleared so BLDC stage remains enabled without steering frames.
     ResetTimeout();
-    pwmMaster = CLAMP(CONSTANT_SPEED_PWM, -1000, 1000);
+    if (millis() < CONSTANT_SPEED_STARTUP_MS)
+    {
+      pwmMaster = CLAMP(CONSTANT_SPEED_STARTUP_PWM, -1000, 1000);
+    }
+    else
+    {
+      pwmMaster = CLAMP(CONSTANT_SPEED_PWM, -1000, 1000);
+    }
     pwmSlave = pwmMaster;
 #else
     if ((steerCounter % 2) == 0)

@@ -68,12 +68,14 @@
 #endif
 
 // ###### ARMCHAIR ######
-#define FILTER_SHIFT 12 						// Low-pass filter for pwm, rank k=12
+#define FILTER_SHIFT 10 						// Low-pass filter for pwm, lower value improves startup response
 
 // Constant speed mode: when enabled, steering input is ignored and both motors
 // run with a fixed PWM value (range -1000..1000).
 #define CONSTANT_SPEED_MODE  1
-#define CONSTANT_SPEED_PWM   350
+#define CONSTANT_SPEED_PWM   420
+#define CONSTANT_SPEED_STARTUP_PWM 650
+#define CONSTANT_SPEED_STARTUP_MS  1500
 
 // Bench-test helpers for bring-up. Keep these disabled for normal driving.
 #define TEST_BYPASS_START_BUTTON  1
@@ -83,6 +85,8 @@
 #define TEST_FORCE_BUZZER         1
 #define TEST_BUZZER_FREQ          6
 #define TEST_BUZZER_PATTERN       0
+#define TEST_BUZZER_ON_MS         500
+#define TEST_BUZZER_PERIOD_MS     10000
 
 // Force a visible LED chase pattern for bring-up checks.
 #define TEST_FORCE_LED            1
