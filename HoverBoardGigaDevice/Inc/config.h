@@ -43,7 +43,7 @@
 #define PWM_FREQ         		16000     // PWM frequency in Hz
 #define DEAD_TIME        		60        // PWM deadtime (60 = 1�s, measured by oscilloscope)
 
-#define DC_CUR_LIMIT     		22        // Motor DC current limit in amps (raised for startup torque)
+#define DC_CUR_LIMIT     		15        // Motor DC current limit in amps
 
 // ################################################################################
 
