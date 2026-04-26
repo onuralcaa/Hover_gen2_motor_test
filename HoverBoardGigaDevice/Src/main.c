@@ -336,36 +336,44 @@ int main (void)
   while(1)
 	{
 #ifdef MASTER
-		steerCounter++;	
-		if ((steerCounter % 2) == 0)
-		{	
-			// Request steering data
-			SendSteerDevice();
-		}
-		
-		// Calculate expo rate for less steering with higher speeds
-		expo = MAP((float)ABS(speed), 0, 1000, 1, 0.5);
-		
-	  // Each speedvalue or steervalue between 50 and -50 means absolutely no pwm
-		// -> to get the device calm 'around zero speed'
-		scaledSpeed = speed < 50 && speed > -50 ? 0 : CLAMP(speed, -1000, 1000) * SPEED_COEFFICIENT;
-		scaledSteer = steer < 50 && steer > -50 ? 0 : CLAMP(steer, -1000, 1000) * STEER_COEFFICIENT * expo;
-		
-		// Map to an angle of 180 degress to 0 degrees for array access (means angle -90 to 90 degrees)
-		steerAngle = MAP((float)scaledSteer, -1000, 1000, 180, 0);
-		xScale = lookUpTableAngle[(uint16_t)steerAngle];
+    steerCounter++;
 
-		// Mix steering and speed value for right and left speed
-		if(steerAngle >= 90)
-		{
-			pwmSlave = CLAMP(scaledSpeed, -1000, 1000);
-			pwmMaster = CLAMP(pwmSlave / xScale, -1000, 1000);
-		}
-		else
-		{
-			pwmMaster = CLAMP(scaledSpeed, -1000, 1000);
-			pwmSlave = CLAMP(xScale * pwmMaster, -1000, 1000);
-		}
+#if CONSTANT_SPEED_MODE
+    // Keep timeout cleared so BLDC stage remains enabled without steering frames.
+    ResetTimeout();
+    pwmMaster = CLAMP(CONSTANT_SPEED_PWM, -1000, 1000);
+    pwmSlave = pwmMaster;
+#else
+    if ((steerCounter % 2) == 0)
+    {
+      // Request steering data
+      SendSteerDevice();
+    }
+
+    // Calculate expo rate for less steering with higher speeds
+    expo = MAP((float)ABS(speed), 0, 1000, 1, 0.5);
+
+    // Each speedvalue or steervalue between 50 and -50 means absolutely no pwm
+    // -> to get the device calm 'around zero speed'
+    scaledSpeed = speed < 50 && speed > -50 ? 0 : CLAMP(speed, -1000, 1000) * SPEED_COEFFICIENT;
+    scaledSteer = steer < 50 && steer > -50 ? 0 : CLAMP(steer, -1000, 1000) * STEER_COEFFICIENT * expo;
+
+    // Map to an angle of 180 degress to 0 degrees for array access (means angle -90 to 90 degrees)
+    steerAngle = MAP((float)scaledSteer, -1000, 1000, 180, 0);
+    xScale = lookUpTableAngle[(uint16_t)steerAngle];
+
+    // Mix steering and speed value for right and left speed
+    if(steerAngle >= 90)
+    {
+      pwmSlave = CLAMP(scaledSpeed, -1000, 1000);
+      pwmMaster = CLAMP(pwmSlave / xScale, -1000, 1000);
+    }
+    else
+    {
+      pwmMaster = CLAMP(scaledSpeed, -1000, 1000);
+      pwmSlave = CLAMP(xScale * pwmMaster, -1000, 1000);
+    }
+#endif
 		
 		// Read charge state
 		chargeStateLowActive = gpio_input_bit_get(CHARGE_STATE_PORT, CHARGE_STATE_PIN);
