@@ -339,19 +339,53 @@ int main (void)
 
 #if TEST_FORCE_LED
     {
-      uint32_t ledStep = (millis() / TEST_LED_STEP_MS) % 4;
-      gpio_bit_write(LED_GREEN_PORT, LED_GREEN, ledStep == 0 ? SET : RESET);
-      gpio_bit_write(LED_ORANGE_PORT, LED_ORANGE, ledStep == 1 ? SET : RESET);
-      gpio_bit_write(LED_RED_PORT, LED_RED, ledStep == 2 ? SET : RESET);
-      gpio_bit_write(UPPER_LED_PORT, UPPER_LED_PIN, ledStep == 3 ? SET : RESET);
-      gpio_bit_write(LOWER_LED_PORT, LOWER_LED_PIN, ledStep == 3 ? SET : RESET);
+      // SysTick is configured to 10ms, therefore millis() increments in 10ms steps.
+      static uint32_t lastLedTick = 0;
+      static uint8_t ledStep = 0;
+      uint32_t nowTick = millis();
+      uint32_t stepTicks = (TEST_LED_STEP_MS / 10);
+      if (stepTicks == 0)
+      {
+        stepTicks = 1;
+      }
+
+      if ((nowTick - lastLedTick) >= stepTicks)
+      {
+        lastLedTick = nowTick;
+
+        switch (ledStep)
+        {
+          case 0: gpio_bit_toggle(LED_GREEN_PORT, LED_GREEN); break;
+          case 1: gpio_bit_toggle(LED_ORANGE_PORT, LED_ORANGE); break;
+          case 2: gpio_bit_toggle(LED_RED_PORT, LED_RED); break;
+          case 3: gpio_bit_toggle(UPPER_LED_PORT, UPPER_LED_PIN); break;
+          default: gpio_bit_toggle(LOWER_LED_PORT, LOWER_LED_PIN); break;
+        }
+
+        ledStep++;
+        if (ledStep > 4)
+        {
+          ledStep = 0;
+        }
+      }
     }
 #endif
 
 #if TEST_FORCE_BUZZER
     {
-      uint32_t buzzerTick = millis() % TEST_BUZZER_PERIOD_MS;
-      if (buzzerTick < TEST_BUZZER_ON_MS)
+      uint32_t nowTick = millis();
+      uint32_t buzzerPeriodTicks = (TEST_BUZZER_PERIOD_MS / 10);
+      uint32_t buzzerOnTicks = (TEST_BUZZER_ON_MS / 10);
+      if (buzzerPeriodTicks == 0)
+      {
+        buzzerPeriodTicks = 1;
+      }
+      if (buzzerOnTicks == 0)
+      {
+        buzzerOnTicks = 1;
+      }
+
+      if ((nowTick % buzzerPeriodTicks) < buzzerOnTicks)
       {
 				buzzerFreq = TEST_BUZZER_FREQ;
 				buzzerPattern = TEST_BUZZER_PATTERN;
@@ -367,13 +401,37 @@ int main (void)
 #if CONSTANT_SPEED_MODE
     // Keep timeout cleared so BLDC stage remains enabled without steering frames.
     ResetTimeout();
+
     if (millis() < CONSTANT_SPEED_STARTUP_MS)
     {
       pwmMaster = CLAMP(CONSTANT_SPEED_STARTUP_PWM, -1000, 1000);
     }
     else
     {
+#if CONSTANT_SPEED_PULSE_MODE
+      uint32_t nowTick = millis();
+      uint32_t pulsePeriodTicks = (CONSTANT_SPEED_PULSE_PERIOD_MS / 10);
+      uint32_t pulseOnTicks = (CONSTANT_SPEED_PULSE_ON_MS / 10);
+      if (pulsePeriodTicks == 0)
+      {
+        pulsePeriodTicks = 1;
+      }
+      if (pulseOnTicks == 0)
+      {
+        pulseOnTicks = 1;
+      }
+
+      if ((nowTick % pulsePeriodTicks) < pulseOnTicks)
+      {
+        pwmMaster = CLAMP(CONSTANT_SPEED_PWM, -1000, 1000);
+      }
+      else
+      {
+        pwmMaster = 0;
+      }
+#else
       pwmMaster = CLAMP(CONSTANT_SPEED_PWM, -1000, 1000);
+#endif
     }
     pwmSlave = pwmMaster;
 #else
