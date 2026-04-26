@@ -91,6 +91,10 @@
 #define TEST_BUZZER_ON_MS         500
 #define TEST_BUZZER_PERIOD_MS     10000
 
+// Hall diagnostics: emit short buzzer chirps on hall transitions.
+#define TEST_HALL_BUZZER          1
+#define TEST_HALL_BUZZER_MS       40
+
 // Force a visible LED chase pattern for bring-up checks.
 #define TEST_FORCE_LED            0
 #define TEST_LED_STEP_MS          250

@@ -64,6 +64,10 @@ FlagStatus buzzerToggle = RESET;
 uint8_t buzzerFreq = 0;
 uint8_t buzzerPattern = 0;
 uint16_t buzzerTimer = 0;
+#if TEST_HALL_BUZZER
+uint16_t hallBuzzerTicks = 0;
+uint8_t lastHall = 0;
+#endif
 int16_t offsetcount = 0;
 int16_t offsetdc = 2000;
 uint32_t speedCounter = 0;
@@ -209,6 +213,36 @@ void CalculateBLDC(void)
 	// Determine current position based on hall sensors
   hall = hall_a * 1 + hall_b * 2 + hall_c * 4;
   pos = hall_to_pos[hall];
+
+#ifdef MASTER
+#if TEST_HALL_BUZZER
+  // A short chirp on each valid hall transition helps verify hall wiring.
+  if (hall != lastHall)
+  {
+    if (pos != 0)
+    {
+      hallBuzzerTicks = (uint16_t)((TEST_HALL_BUZZER_MS * PWM_FREQ) / 1000);
+      if (hallBuzzerTicks == 0)
+      {
+        hallBuzzerTicks = 1;
+      }
+      buzzerFreq = (uint8_t)(hall + 2);
+      buzzerPattern = 0;
+    }
+    lastHall = hall;
+  }
+
+  if (hallBuzzerTicks > 0)
+  {
+    hallBuzzerTicks--;
+  }
+  else
+  {
+    buzzerFreq = 0;
+    buzzerPattern = 0;
+  }
+#endif
+#endif
 	
 	// Calculate low-pass filter for pwm value
 	filter_reg = filter_reg - (filter_reg >> FILTER_SHIFT) + bldc_inputFilterPwm;
