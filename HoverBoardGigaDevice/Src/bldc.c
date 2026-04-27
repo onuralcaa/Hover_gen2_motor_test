@@ -177,14 +177,18 @@ void CalculateBLDC(void)
   if (buzzerFreq != 0 && (buzzerTimer / 5000) % (buzzerPattern + 1) == 0)
 	{
     if (buzzerTimer % buzzerFreq == 0)
-		{
-			buzzerToggle = buzzerToggle == RESET ? SET : RESET; // toggle variable
-		  gpio_bit_write(BUZZER_PORT, BUZZER_PIN, buzzerToggle);
+    {
+      buzzerToggle = buzzerToggle == RESET ? SET : RESET; // toggle variable
+#if !defined(DISABLE_BUZZER) || (DISABLE_BUZZER == 0)
+      gpio_bit_write(BUZZER_PORT, BUZZER_PIN, buzzerToggle);
+#endif
     }
   }
-	else
-	{
-		gpio_bit_write(BUZZER_PORT, BUZZER_PIN, RESET);
+  else
+  {
+#if !defined(DISABLE_BUZZER) || (DISABLE_BUZZER == 0)
+    gpio_bit_write(BUZZER_PORT, BUZZER_PIN, RESET);
+#endif
   }
 #endif
 	

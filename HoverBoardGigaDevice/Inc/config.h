@@ -91,6 +91,9 @@
 #define TEST_BUZZER_ON_MS         500
 #define TEST_BUZZER_PERIOD_MS     10000
 
+// Quick test option: disable buzzer output entirely (set 1 to mute)
+#define DISABLE_BUZZER            1
+
 // Hall diagnostics: emit short buzzer chirps on hall transitions.
 #define TEST_HALL_BUZZER          0
 #define TEST_HALL_BUZZER_MS       40
