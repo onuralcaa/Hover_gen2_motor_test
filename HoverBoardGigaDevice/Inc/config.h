@@ -43,7 +43,7 @@
 #define PWM_FREQ         		16000     // PWM frequency in Hz
 #define DEAD_TIME        		60        // PWM deadtime (60 = 1�s, measured by oscilloscope)
 
-#define DC_CUR_LIMIT     		15        // Motor DC current limit in amps
+#define DC_CUR_LIMIT     		20        // Motor DC current limit in amps (test value)
 
 // ################################################################################
 
@@ -73,10 +73,10 @@
 // Constant speed mode: when enabled, steering input is ignored and both motors
 // run with a fixed PWM value (range -1000..1000).
 #define CONSTANT_SPEED_MODE  1
-#define CONSTANT_SPEED_PWM   170
-#define CONSTANT_SPEED_STARTUP_PWM 260
-#define CONSTANT_SPEED_STARTUP_MS  400
-#define CONSTANT_SPEED_PULSE_MODE  1
+#define CONSTANT_SPEED_PWM   240
+#define CONSTANT_SPEED_STARTUP_PWM 360
+#define CONSTANT_SPEED_STARTUP_MS  600
+#define CONSTANT_SPEED_PULSE_MODE  0
 #define CONSTANT_SPEED_PULSE_ON_MS 120
 #define CONSTANT_SPEED_PULSE_PERIOD_MS 900
 
